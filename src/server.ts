@@ -34,7 +34,23 @@ app.get("/echo/:exampleRouteParameter", (req, res) => {
   });
 });
 
-app.get("/multiply/:numOne/:numTwo", (req, res) => {
+app.get<{shout: string}>("/shout/:shout", (req,res) => {
+  let shout = req.params.shout;
+  res.json({   
+     message: "I am shouting back to you: " + shout.toUpperCase() + '!',
+  })
+})
+
+app.get<{num1 : string, num2: string, num3 : string}>("/add/:num1/:num2/:num3",(req, res)=> {
+let {num1, num2, num3 } = req.params
+const result = parseInt(num1)+ parseInt(num2) + parseInt(num3);
+res.json({
+   original: `${num1} + ${num2} + ${num3}`,
+   result: result,
+})
+})
+
+app.get<{numOne : string, numTwo: string}>("/multiply/:numOne/:numTwo", (req, res) => {
   /**
    * Note that `numOne` and `numTwo` are both typed as string.
    * (Hover over with your mouse to see!)
@@ -42,7 +58,8 @@ app.get("/multiply/:numOne/:numTwo", (req, res) => {
    * Route params are, by default, typed as strings when they
    * are parsed by Express.
    */
-  const { numOne, numTwo } = req.params;
+  console.log(req.params);
+  const { numOne, numTwo} = req.params;
   const multiplication = parseInt(numOne) * parseInt(numTwo);
   res.json({
     original: `${numOne} x ${numTwo}`,
